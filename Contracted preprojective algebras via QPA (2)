@@ -1,0 +1,33 @@
+#First define the classical preprojective algebra by quiver and relations in QPA. For type E_6 we can do this as follows:
+
+K:=Rationals;Q:=Quiver( ["x1","x2","x3","x4","x5","x6"], [["x1","x2","a1"],["x2","x3","a2"],["x3","x4","a3"],["x4","x5","a4"],["x6","x3","a5"],["x2","x1","b1"],["x3","x2","b2"],["x4","x3","b3"],["x5","x4","b4"],["x3","x6","b5"]] );
+KQ:=PathAlgebra(K,Q);AssignGeneratorVariables(KQ);rel:=[a1*b1+a2*b2+a3*b3+a4*b4+a5*b5-(b1*a1+b2*a2+b3*a3+b4*a4+b5*a5)];A:=KQ/rel;
+
+
+
+#Now you can obtain the contracted preprojective algebra B=eAe for e a sum of primitive idempotents corresponding to the vertices as follows: First specify which e you want by giving the list T=[i_1,i_2,...,i_r] such that e=e_{i_1}+e_{i_2}+...e_{i_r}, where e_t denotes the primitive idempotent corresponding to the vertex t in the quiver of the algebra A. We do this by defining a list T=[i_1,i_2,...,i_r] in an example using the already existing QPA-command QuiverAlgebraOfeAe:
+
+T:=[1,2,4];
+projA:=IndecProjectiveModules(A);gensA:=GeneratorsOfAlgebra(A);n:=Size(projA);U:=[]; for i in [2..n+1] do Append(U,[gensA[i]]);od;
+UU:=[];for i in T do Append(UU,[U[i]]);od;
+RR:=Sum(UU);
+B:=QuiverAlgebraOfeAe(A,RR);
+
+
+#Warning: This can take a long time in general for large preprojective algebras and big T!
+
+#After the calculation, you can display quiver and relations for the algebra B as follows in QPA:
+
+QQ:=QuiverOfPathAlgebra(B);Display(QQ);rel:=RelatorsOfFpAlgebra(B);
+
+#In the article https://arxiv.org/abs/2409.05603 it was proven that contracted preprojective algebras B of Dynkin type have finitistic injective/projective dimension <=2. Thus B always has global dimension (<=2 or infinite) and selfinjective dimension (<=2 or infinite) and the dominant dimension is (<=2 or it is selfinjective). We can thus obtain the desired homological dimensions as follows with QPA:
+
+IsSelfinjectiveAlgebra(B);GorensteinDimensionOfAlgebra(B,3);GlobalDimensionOfAlgebra(B,3);DominantDimensionOfAlgebra(B,3);
+
+#In this concrete example for the given T, the output is:
+#false
+#false
+#infinity
+#2
+
+#This means: B is not selfinjective, it has infinite selfinjective dimension, it has infinite global dimension and the dominant dimension of B is equal to 2.
